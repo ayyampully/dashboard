@@ -71,19 +71,23 @@ class MultiWindow extends Layout{
     init(){
         console.log('MultiWindow')
         document.getElementById('container').appendChild(this.elm);
-        this.setColumns();
+        this.setColumns(2);
         this.layoutChange.addEventListener('click', this.setColumns.bind(this, 3))
         for(let col of this.cols){
             col.addEventListener('dragover', this.onDragover.bind(this))
             col.addEventListener('drop', this.onDrop.bind(this))
         }
     }
-    setColumns(){
-       let col = 2;
+    setColumns(col){
+       this.cols = [];
+       if(this.widgetWrap) this.elm.removeChild(this.widgetWrap)
+       this.widgetWrap = createDiv('widget-wrap', 'widget-wrap');
+       this.elm.appendChild(this.widgetWrap);
+
        for(let i = 0; i<col; i++){
            var item = getDashboardCol(i, this.layout)
            this.cols.push(item)
-           this.elm.appendChild(item)
+           this.widgetWrap.appendChild(item)
        }
        
     }
