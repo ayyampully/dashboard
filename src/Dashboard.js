@@ -27,39 +27,32 @@ function solution(movies, K, L){
 }
 
 
-function solutionA(Ary){
-	//if(Ary)
-	Ary.forEach(function(g, index){
-		Ary.forEach(function(i){
-			if(g !== i){
-				Ary[index+1] > i
-			}
-		})
-	})
+function groupArray(Ary){
+    var grp = 0;
+    (function innerFunc(array){
+        var len = array.length;
+        if(!len) return len;
+        var siblings = 0;
+        var min = Math.min.apply(null, array);
+        
+        (function findNext(k){
+            siblings++;
+            if(array[k]===min){
+                grp++;
+                array.splice(0, siblings)
+                innerFunc(array);
+            } else {
+                findNext(siblings);
+            }
+        })(0);
+    })(Ary);
+    return grp;
 	
-	var grp = 0;
-	var len = Ary.length;
-	for(var i = 0; i<len; i++){
-		for(var k = 0; k<len; k++){
-			if(i !== k && Ary[i+1] > Ary[k]){
-				console.log(Ary[i+1] , Ary[k])
-				grp++
-				break;
-			} else{
-			}
-		}
-	}
-	console.log(grp)
 }
 
 
 
-
-
-
-
-
-
-console.log(solutionA([1,5,4,9,8,7,12,13,14]))
+console.log(groupArray([1,5,4,9,8,7,12,13,14]))
+console.log(groupArray([4,3,2,6,1]))
 //console.log(solution([6,1,4,6,3,2,7,4], 3, 2))
 //console.log(solution([10, 19, 15], 2, 2))
