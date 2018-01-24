@@ -24,7 +24,6 @@ function solution(movies, K, L){
 		ary2.push(temp2)
 		
 	})
-    
     return (function returnValue(){
         var max1 = Math.max.apply(null, ary1);
         var day1 = ary1.indexOf(max1);
@@ -35,20 +34,21 @@ function solution(movies, K, L){
         var dayDiff = day1-day2;
         dayDiff = dayDiff < 0 ? dayDiff*-1 : dayDiff;
         
+        var combined = -1;
         if(!dayDiff || dayDiff < L){
             if(ary1.getCount(max1) > 1){
                 ary1.splice(day1, 1);
-                returnValue();
-            }
-            if(ary2.getCount(max2) > 1){
+                return returnValue();
+            }else if(ary2.getCount(max2) > 1){
                 ary2.splice(day2, 1);
-                returnValue();
-            }
+                return returnValue();
+            } 
             return -1;
         }else{
+
             return max1+max2;
         }
-    })()
+    })();
     
 }
 
@@ -81,5 +81,6 @@ function groupArray(Ary){
 
 //console.log(groupArray([1,5,4,9,8,7,12,13,14]))
 //console.log(groupArray([4,3,2,6,1]))
+console.log(solution([6,1,4,6,3,2,7,4], 3, 2))
 console.log(solution([6,1,4,6,3,2,7,3], 3, 2))
 console.log(solution([10, 19, 15], 2, 2))
