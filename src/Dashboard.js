@@ -77,10 +77,44 @@ function groupArray(Ary){
 	
 }
 
+/*
+You are given an array A consisting of the integers −1, 0 and 1. A slice of that array is any pair of integers (P, Q) such that 0 ≤ P ≤ Q < N. Your task is to find the longest slice of A whose elements yield a non-negative sum.
+
+Write a function:
+
+function solution(A);
+
+that, given an array A of length N, consisting only of the values −1, 0, 1, returns the length of the longest slice of A that yields a non-negative sum. If there's no such slice, your function should return 0.
+
+For example, given A = [−1, −1, 1, −1, 1, 0, 1, −1, −1], your function should return 7, as the slice starting at the second position and ending at the eighth is the longest slice with a non-negative sum.
+
+For another example, given A = [1, 1, −1, −1, −1, −1, −1, 1, 1] your function should return 4: both the first four elements and the last four elements of array A are longest valid slices.
+*/
+function slice(A){
+    var topSlice = [];
+    for(let i = 0; i<A.length; i++){
+        var temp = 0;
+        var sum = [];
+        for(let k = 0; k<A.length; k++){
+            if(k < i) continue;
+            temp += A[k];
+            sum.push(temp);
+        }
+        var max = Math.max.apply(null, sum);
+        if(max < 0) continue;
+        var len = sum.lastIndexOf(max);
+        if(sum.lastIndexOf(0) > len) len = sum.lastIndexOf(0);
+        topSlice.push(len+1);
+    }
+    if(!topSlice.length) return 0;
+    return Math.max.apply(null, topSlice);
+}
 
 
 //console.log(groupArray([1,5,4,9,8,7,12,13,14]))
 //console.log(groupArray([4,3,2,6,1]))
-console.log(solution([6,1,4,6,3,2,7,4], 3, 2))
-console.log(solution([6,1,4,6,3,2,7,3], 3, 2))
-console.log(solution([10, 19, 15], 2, 2))
+//console.log(solution([6,1,4,6,3,2,7,4], 3, 2))
+//console.log(solution([6,1,4,6,3,2,7,3], 3, 2))
+//console.log(solution([10, 19, 15], 2, 2))
+console.log(slice([-1, -1, 1, -1, 1, 0, 1, -1, -1]))
+console.log(slice([1, 1, -1, -1, -1, -1, -1, 1, 1]))
