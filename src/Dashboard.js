@@ -118,3 +118,152 @@ function slice(A){
 //console.log(solution([10, 19, 15], 2, 2))
 console.log(slice([-1, -1, 1, -1, 1, 0, 1, -1, -1]))
 console.log(slice([1, 1, -1, -1, -1, -1, -1, 1, 1]))
+
+
+var Utils = (function(){
+	var publicMethod = {};
+	
+	publicMethod.stackManager = function(command, limit){
+		var commandArray = command.split(''),
+		roboPos = -1,
+		isPicked = 0,
+		memory = [],
+		hexVal = '';
+		
+		for(var i =0; i<limit; i++){
+			memory[i] = 0;
+		}
+		commandArray.forEach(function(elm,index){
+			switch(elm){
+				case 'P':
+					roboPos = 0;
+					isPicked = 1;
+				break;
+				case 'M':
+					if(roboPos<(limit-1)){
+						roboPos++
+					}
+				break;
+				case 'L':
+					var tempVal = memory[roboPos];
+					if(isPicked && tempVal<15){
+						memory[roboPos] = ++tempVal;
+					}
+				break;
+			}
+		});
+		for(var i=0, len=memory.length; i<len; i++){
+			hexVal += memory[i].toString(16);
+		}
+		return hexVal.toUpperCase();
+	}
+	publicMethod.LookAndSay = function(sayit,n){
+		var split = sayit.split(''),
+		curCount = 1,
+		curItem = 0,
+		groupcount = '',
+		output = '';
+		
+		for(var i=0; i<split.length; i++){
+			curItem = split[i]
+			if(curItem==split[i+1]){
+				if(i != (split.length-1)){
+					curCount++
+				}
+			}else{
+				groupcount=curCount+''+split[i]
+				curCount = 1
+				output+=groupcount
+			}
+		}
+		if(n>1){
+			return publicMethod.LookAndSay(output, n-1)
+		}else{
+			return output;
+		}
+	}
+	publicMethod.find = function(list, sublist){
+		list = list.join('');
+		sublist = sublist.join('');
+		return (list.indexOf(sublist));
+	}
+	publicMethod.convertToBase7 = function(number){
+		var denominator = 7,
+			remain = 0,
+			remainArray = [],
+			base7ref = ['0', 'a', 't', 'l', 's', 'i', 'n'],
+			base7 = [];
+		do{
+			remain = number%denominator;
+			number = parseInt(number/denominator);
+			remainArray.push(remain)
+		}while(number);
+		base7 = remainArray.map(function(no){
+			return base7ref[no];
+		});
+		return base7.reverse().join('');
+	}
+	publicMethod.validate = function(str){
+		var split = str.split('~n'),
+			formattedData = [],
+			countRecord = 0,
+			countField = 0,
+			countEmpty = 0,
+			userMsg = "format_error";
+			if(!str){
+				return [countRecord, countField, countEmpty, userMsg].join(':');
+			}
+		split = split.slice(0,split.length-1)
+		countRecord = split.length-1;
+		split.forEach(function(elm, index){
+			var row = split[index].split(/[^\~]\|/g);
+				row = row.splice(1,row.length-2)
+				formattedData[index] = row;
+				if(row.length>countField)countField = row.length;
+				row.forEach(function(elm, i){
+					if(elm === '')countEmpty++
+					if(elm.indexOf('~|') !=-1){
+						row[i] = elm.replace('~|','|')
+					}
+					if(elm.indexOf('~~') !=-1){
+						row[i] = elm.replace('~~','~')
+					}
+				})
+		})
+		console.log(formattedData)
+		var len = formattedData[0].length
+		/* if(len<countField){
+			var diff = countField-len,
+				headers = formattedData[0];
+			for(var i=1; i<=diff; i++){
+				var newtitle = headers[1]+'_'+i;
+				formattedData[0].push(newtitle);
+			}
+		} */
+		console.log(formattedData)
+		userMsg = formattedData[0];
+		userMsg = userMsg[userMsg.length-1]
+		return [countRecord, countField, countEmpty, userMsg].join(':');
+	}
+	return publicMethod;
+})();
+var start = new Date().getTime()
+/* console.log(Utils.stackManager("PMLPMMMLPMLPMML", 10))
+console.log(Utils.stackManager("qqPML123PMMMLPMLPasdMML", 10))
+console.log(Utils.stackManager("PLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPMLPMLPMLPMLPMLPMLPMLPMLPMLPMLPMLPML", 10))
+
+console.log(Utils.LookAndSay('11',2))
+console.log(Utils.LookAndSay('11',1))
+console.log(Utils.LookAndSay('11',4))
+console.log(Utils.LookAndSay('11'))
+
+console.log(Utils.find([1,2,3], [2,3]))
+console.log(Utils.find([1,2,3], [3,2]))
+
+console.log(Utils.convertToBase7(99))
+console.log(Utils.convertToBase7(7))
+ */
+ var rgx =/\|/g;
+ var myArray = ("|na~|me|address|").split(rgx);
+//console.log(Utils.validate('|name|add~|ress|~n|Patr~~ick|patrick@test.com|pat@test.com|~n|Annie||annie@test.com|~n'))
+console.log(myArray)
