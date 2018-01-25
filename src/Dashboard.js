@@ -110,16 +110,49 @@ function slice(A){
     if(!topSlice.length) return 0;
     return Math.max.apply(null, topSlice);
 }
-
+function finalTurn(X, Y, T){
+    var p = [], q = [], e =[], eL, eR;
+    var max = Math.max.apply(null, Y);
+    for(let i = 0; i<T.length; i++){
+        var x = X[i], y = Y[i];
+        if(T[i] === 'X'){
+            q.push(x, y);
+        } else if(T[i] === 'q'){
+            e.push(x, y);
+            eL = (x-1) +''+ (y+1);
+            eR = (x+1) +''+ (y+1);
+        } else {
+            p.push(x, y);
+        }
+    };
+    var pString = p.join('');
+    console.log(pString, eL, eR)
+    var eL_i = pString.indexOf(eL)
+    var eL_r = pString.indexOf(eR)
+    //console.log(pString.indexOf('36'))
+    for(let i = q[1]+1; i<= max; i++){
+        
+        if(e[0]<q[0]){
+            console.log('left')
+            if(e[1]-q[1] > 3){}
+        }else{
+            console.log('right')
+        }
+        //console.log(i)
+    }
+}
 
 //console.log(groupArray([1,5,4,9,8,7,12,13,14]))
 //console.log(groupArray([4,3,2,6,1]))
 //console.log(solution([6,1,4,6,3,2,7,4], 3, 2))
 //console.log(solution([6,1,4,6,3,2,7,3], 3, 2))
 //console.log(solution([10, 19, 15], 2, 2))
-console.log(slice([-1, -1, 1, -1, 1, 0, 1, -1, -1]))
-console.log(slice([1, 1, -1, -1, -1, -1, -1, 1, 1]))
+//console.log(slice([-1, -1, 1, -1, 1, 0, 1, -1, -1]))
+//console.log(slice([1, 1, -1, -1, -1, -1, -1, 1, 1]))
+finalTurn([3, 5, 1, 6], [1, 3, 3, 8], "Xpqp")
+//finalTurn([0, 3, 5, 1, 6], [4, 1, 3, 3, 8], "pXpqp")
 
+//finalTurn([0, 6, 2, 5, 3, 0], [4, 8, 2, 3, 1, 6], "ppqpXp")
 
 var Utils = (function(){
     var publicMethod = {};
