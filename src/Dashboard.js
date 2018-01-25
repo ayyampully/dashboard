@@ -100,10 +100,11 @@ function slice(A){
             temp += A[k];
             sum.push(temp);
         }
-        var max = Math.max.apply(null, sum);
+        var max = sum.reduce(function(a, b){
+            if(a>=0 && b<0){return a;}else{return b;}
+        });
         if(max < 0) continue;
         var len = sum.lastIndexOf(max);
-        if(sum.lastIndexOf(0) > len) len = sum.lastIndexOf(0);
         topSlice.push(len+1);
     }
     if(!topSlice.length) return 0;
@@ -247,8 +248,8 @@ var Utils = (function(){
     }
     return publicMethod;
 })();
-var start = new Date().getTime()
-/* console.log(Utils.stackManager("PMLPMMMLPMLPMML", 10))
+/*var start = new Date().getTime()
+ console.log(Utils.stackManager("PMLPMMMLPMLPMML", 10))
 console.log(Utils.stackManager("qqPML123PMMMLPMLPasdMML", 10))
 console.log(Utils.stackManager("PLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPMLPMLPMLPMLPMLPMLPMLPMLPMLPMLPMLPML", 10))
 
@@ -262,8 +263,8 @@ console.log(Utils.find([1,2,3], [3,2]))
 
 console.log(Utils.convertToBase7(99))
 console.log(Utils.convertToBase7(7))
- */
+ 
  var rgx =/\|/g;
  var myArray = ("|na~|me|address|").split(rgx);
 //console.log(Utils.validate('|name|add~|ress|~n|Patr~~ick|patrick@test.com|pat@test.com|~n|Annie||annie@test.com|~n'))
-console.log(myArray)
+console.log(myArray)*/
