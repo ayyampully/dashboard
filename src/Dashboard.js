@@ -119,27 +119,86 @@ function finalTurn(X, Y, T){
             q.push(x, y);
         } else if(T[i] === 'q'){
             e.push(x, y);
-            eL = (x-1) +''+ (y+1);
-            eR = (x+1) +''+ (y+1);
+            eL = (x-1) +','+ (y+1);
+            eR = (x+1) +','+ (y+1);
         } else {
-            p.push(x, y);
+            p.push([x, y]);
         }
     };
     var pString = p.join('');
-    console.log(pString, eL, eR)
+    //console.log(pString, eL, eR)
     var eL_i = pString.indexOf(eL)
-    var eL_r = pString.indexOf(eR)
-    //console.log(pString.indexOf('36'))
-    for(let i = q[1]+1; i<= max; i++){
-        
-        if(e[0]<q[0]){
-            console.log('left')
-            if(e[1]-q[1] > 3){}
-        }else{
-            console.log('right')
-        }
-        //console.log(i)
+    var eR_i = pString.indexOf(eR)
+    //p.splice(eL_i, 1);//TODO
+    
+    eL_i = (eL_i === 0 && e[1]-q[1] < 3);
+    eR_i = (eR_i === 0 && e[1]-q[1] < 3);
+    
+    var point = 0;
+
+    Number.prototype.toPositive = function(){
+        return this<0 ? this*-1 : this;
     }
+    Array.prototype.findNext = function(val){
+        var temp;
+        var x = 0, x2 = 0;
+        this.forEach(function(ary){
+            if(ary[1]>val[1]){
+                x = (ary[0] - val[0]) * (ary[1] - val[1]);
+                x = x.toPositive();
+                if(x < x2 || !temp){
+                    temp = ary;
+                    x2 = x;
+                }
+            }
+        })
+        return temp;
+    }
+    
+    var defaultPoint = 10;
+    var currentPosition = 0,
+        pawnIndex = 0;
+    (function huntFor(prey){
+        currentPosition++;
+        if(currentPosition > max) return 0;
+        if(defaultPoint !== 10){eL_i=false; eR_i=false;}
+        if(prey[0]<=q[0] && !eL_i){
+            q[0] = q[0]-1;
+            q[1] = q[1]+1;
+            if(prey[0]===q[0] && prey[1]===q[1]){
+                point+=defaultPoint;
+                q[0] = q[0]-1;
+                q[1] = q[1]+1;
+                currentPosition++;
+                if(defaultPoint === 1) pawnIndex++;
+                defaultPoint = 1
+                huntFor(p.findNext(q));
+            } else {
+                huntFor(prey);
+            }
+            
+        }else if(prey[0]>=q[0] && !eR_i){
+            q[0] = q[0]+1;
+            q[1] = q[1]+1;
+            if(prey[0]===q[0] && prey[1]===q[1]){
+                point+=defaultPoint;
+                q[0] = q[0]-1;
+                q[1] = q[1]+1;
+                currentPosition++;
+                if(defaultPoint === 1) pawnIndex++;
+                defaultPoint = 1;
+                huntFor(p.findNext(q));
+            } else {
+                huntFor(prey);
+            }
+            
+        }else{
+            defaultPoint = 1;
+            huntFor(p.findNext(q));
+        }
+    })(e);
+
+    return point;
 }
 
 //console.log(groupArray([1,5,4,9,8,7,12,13,14]))
@@ -149,10 +208,10 @@ function finalTurn(X, Y, T){
 //console.log(solution([10, 19, 15], 2, 2))
 //console.log(slice([-1, -1, 1, -1, 1, 0, 1, -1, -1]))
 //console.log(slice([1, 1, -1, -1, -1, -1, -1, 1, 1]))
-finalTurn([3, 5, 1, 6], [1, 3, 3, 8], "Xpqp")
-//finalTurn([0, 3, 5, 1, 6], [4, 1, 3, 3, 8], "pXpqp")
 
-//finalTurn([0, 6, 2, 5, 3, 0], [4, 8, 2, 3, 1, 6], "ppqpXp")
+console.log(finalTurn([3, 5, 1, 6], [1, 3, 3, 8], "Xpqp"))//10
+console.log(finalTurn([0, 3, 5, 1, 6], [4, 1, 3, 3, 8], "pXpqp"))//2
+console.log(finalTurn([0, 6, 2, 5, 3, 0], [4, 8, 2, 3, 1, 6], "ppqpXp"))//12
 
 var Utils = (function(){
     var publicMethod = {};
