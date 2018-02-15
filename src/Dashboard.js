@@ -208,11 +208,73 @@ function finalTurn(X, Y, T){
 //console.log(solution([10, 19, 15], 2, 2))
 //console.log(slice([-1, -1, 1, -1, 1, 0, 1, -1, -1]))
 //console.log(slice([1, 1, -1, -1, -1, -1, -1, 1, 1]))
+/*var array = [
+    ['0','0','.','0'],
+    ['0','.','0','0'],
+    ['.','.','.','0'],
+    ['0','.','0','.'],
+    ['.','.','.','0'],
+    ['0','0','0','.'],
+];
 
-console.log(finalTurn([3, 5, 1, 6], [1, 3, 3, 8], "Xpqp"))//10
+
+var width = array[0].length; // the number of cells on the X axis
+var height = array.length; // the number of cells on the Y axis
+
+
+var str = [];
+var max = Math.max.apply(null, [width, height])
+for(var x = 0; x<max; x++){
+    
+    for(var y = 0; y<max; y++){
+        
+        str = [y, x];
+        if(!array[x]) break;
+        if(array[x][y] === '0'){
+            
+            (function findNext(count){
+                if(array[x][y + count] === '0'){
+                    str.push(y + count, x);
+                } else if (array[x][y + (++count)]){
+                    findNext(count)
+                } else{
+                    str.push(-1,-1);
+                }
+            })(1);
+            
+            (function findNext(count){
+               // debugger;
+                if(array[x + count] && array[x + count][y] === '0'){
+                    str.push(y,x + count)
+                 }else if (array[x + (++count)]){
+                    findNext(count)
+                } else{
+                    str.push(-1,-1);
+                }
+            })(1);
+            console.log(str.join(' '));
+        }
+    }
+}*/
+
+(function(){
+    //console.log('-----Close to zero-----');
+    var array = [-5,-4,-2,12,-40,4,2,18,11,5]
+    
+    var x = array.reduce(function(i, next){
+        var temp = i, temp2 = next;
+        if(i < 0) temp = i * -1;
+        if(next < 0) temp2 = next * -1;
+        if(temp === temp2) return i < next ? next : i;
+        return temp < temp2 ? i : next;
+    });
+    console.log(x)
+})()
+
+/*console.log(finalTurn([3, 5, 1, 6], [1, 3, 3, 8], "Xpqp"))//10
 console.log(finalTurn([0, 3, 5, 1, 6], [4, 1, 3, 3, 8], "pXpqp"))//2
 console.log(finalTurn([0, 6, 2, 5, 3, 0], [4, 8, 2, 3, 1, 6], "ppqpXp"))//12
-
+*/
 var Utils = (function(){
     var publicMethod = {};
     
