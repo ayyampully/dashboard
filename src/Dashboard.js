@@ -257,8 +257,7 @@ for(var x = 0; x<max; x++){
     }
 }*/
 
-(function(){
-    //console.log('-----Close to zero-----');
+/*(function(){
     var array = [-5,-4,-2,12,-40,4,2,18,11,5]
     
     var x = array.reduce(function(i, next){
@@ -269,12 +268,165 @@ for(var x = 0; x<max; x++){
         return temp < temp2 ? i : next;
     });
     console.log(x)
-})()
+})()*/
+/*
+(function(){
+    var lightX = 31,
+        lightY = 16,
+        initialTX = 0,
+        initialTY = 2;
+      debugger  
+    while(lightX!==initialTX || lightY!==initialTY){
+        var diffX = lightX-initialTX;
+        var diffY = lightY-initialTY;
+        var dir = '';
+        if(diffX > 0){
+            initialTX++
+            if(diffY === 0){
+                dir = 'E';
+            }else if(diffY > 0){
+                dir = 'SE';
+                initialTY++               
+            } else {
+                dir = 'NE';
+                initialTY--
+            }
+        }
+        if(diffX < 0){
+            initialTX--
+            if(diffY === 0){
+                dir = 'W';
+            }else if(diffY > 0){
+                dir = 'SW';
+                initialTY++
+            } else {
+                dir = 'NW';
+                initialTY--
+            }
+        }
+        
+        if(diffY < 0 && diffX === 0){dir = 'N'; initialTY--}
+        if(diffY > 0 && diffX === 0){dir = 'S'; initialTY++}
 
+        console.log(initialTX, initialTY);
+        console.log(dir);
+    }
+})()
+*/
 /*console.log(finalTurn([3, 5, 1, 6], [1, 3, 3, 8], "Xpqp"))//10
 console.log(finalTurn([0, 3, 5, 1, 6], [4, 1, 3, 3, 8], "pXpqp"))//2
 console.log(finalTurn([0, 6, 2, 5, 3, 0], [4, 8, 2, 3, 1, 6], "ppqpXp"))//12
 */
+
+function solution2(A, B) {
+    var countA = 0;
+    var countB = 0;
+    var cloneA = A.map(x => x);
+    var cloneB = B.map(x => x);
+    for(var i = 0, len = A.length; i<len; i++){
+        if(Math.min.apply(null, B) === B[0]) break;
+        var item = cloneA[i];
+        if(item >= cloneA[i+1] && cloneB[i] < cloneA[i+1] && cloneB[i-1] < item && item < cloneB[i+1]){
+            cloneA[i] = cloneB[i];
+            cloneB[i] = item;
+            countA++;
+        }
+    }
+    cloneA = A.map(x => x);
+    cloneB = B.map(x => x);
+    for(var i = 0, len = B.length; i<len; i++){
+        if(Math.min.apply(null, A) === A[0]) break;
+        var item = cloneB[i];
+        if(item >= cloneB[i+1] && cloneA[i] < cloneB[i+1] && cloneA[i-1] < item && item < cloneA[i+1]){
+            cloneB[i] = cloneA[i];
+            cloneA[i] = item;
+            countB++;
+        }
+    }
+    if(!countA && !countB && (A.toString() === A.sort().toString() && B.toString() === B.sort().toString())) return 0;
+    if(countA && !countB) return countA;
+    if(countB && !countA) return countB;
+    if(countB && countA) return countA < countB ? countA : countB;
+    return -1;
+}
+/*console.log(solution2([5, 3, 7, 7, 10], [1, 6, 6, 9, 9]))//2
+console.log(solution2([5, -3, 6, 4, 8], [2, 6, -5, 1, 0]))//-1
+console.log(solution2([1, 5, 6], [-2, 0, 2]))//0*/
+
+/*[0, 1, 2, 3].reduce(function(a, b){
+    
+    console.log(a, b)
+    return b;
+})*/
+
+var max = 10
+var temp = [];
+temp.push(0, 1)
+var val = 0
+while(val < max){
+    var len = temp.length;
+    var a = temp[len-2];
+    var b = temp[len-1];
+    val = a + b;
+    if(val > max) break;
+    temp.push(val);
+}
+temp.shift()
+//console.log(temp)
+
+
+
+/*For example, if N = 4 and theater program looks as following: [1, 2, 1, 1], Kate has four possibilities to choose the dates: [1, 2, 1, 1], [1, 2, 1, 1], [1, 2, 1, 1], and [1, 2, 1, 1], but they create only three different sequences: (1, 2, 1), (1, 1, 1) and (2, 1, 1). The correct answer for this example is 3. Notice that the order of performances matters, so the first and the last sequences are considered different.
+
+Write a function:
+
+function solution(A);
+
+that, given an array A consisting of N integers, denoting names of performances for the next N days, returns the number of possible ways to spend the tickets. Since the answer can be very large, provide it modulo 109 + 7 (1,000,000,007).
+
+For example, given A = [1, 2, 1, 1], the function should return 3 as exmplained above.
+
+Given A = [1, 2, 3, 4], the function should return 4. There are four ways to spend tickets: (1, 2, 3), (1, 2, 4), (1, 3, 4) and (2, 3, 4).
+
+Given A = [2, 2, 2, 2], the function should return 1. There is only one way to spend tickets: (2, 2, 2).
+
+Given A = [2, 2, 1, 2, 2], the function should return 4. There are four ways to spend tickets: (1, 2, 2), (2, 1, 2), (2, 2, 1) and (2, 2, 2).
+
+Given A = [1, 2], the function should return 0. Kate cannot use all three tickets in only two days.*/
+console.log(solutionT([1, 2, 1, 1]))
+console.log(solutionT([1, 2, 3, 4]))
+console.log(solutionT([2, 2, 2, 2]))
+console.log(solutionT([2, 2, 1, 2, 2]))
+console.log(solutionT([1, 2]))
+console.log(solutionT([1, 2, 3]))
+
+function solutionT(A) {
+    if(!A || A.length < 3) return 0;
+    if(A.length === 3) return 1;
+    var sets = new Set();
+    (function rec(k){
+        for(var i = k; i<A.length; i++){
+            if(typeof A[i] !== "number") continue;
+            var temp = [A[i]];
+            for(var j = 0; j<A.length; j++){
+                if(typeof A[j] !== "number") continue;
+                if(j === i) continue;
+                temp.push(A[j]);
+                if(temp.length === 3) {
+                    sets.add(temp.toString())
+                    temp = [A[i]];
+                }
+            }
+        }
+        if(k < A.length){
+            k++
+            setTimeout(rec(k), 0);
+        }
+        
+    })(0)
+    return sets.size;
+}
+
 var Utils = (function(){
     var publicMethod = {};
     

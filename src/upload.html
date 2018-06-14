@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+    <title>Async</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <style>body{margin:0}</style>
+</head>
+<body>
+<div id="container">
+    <h2><span class="text">Helloo </span><span class="newText"></span><span class="cursor"></span></h2>
+    <div id="bubbles">
+    <span></span>
+    </div>
+</div>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" >
+$(function() {
+    var strArray = ["HTML", "CSS", "JAVASCRIPT"];
+    var bubbles = $("#bubbles")
+    var height = bubbles.innerHeight()
+    var width = bubbles.innerWidth()
+    
+    var bubblesCount = Math.ceil((width/10) * (height/10))
+    /*for(var i=0; i <= bubblesCount; i++ ){
+        bubbles.append($("<span>"))
+    }*/
+    (function animateWords(k){
+        let str = strArray[k]
+        if(!str) return;
+        var temp = "";
+        for(let i = 0; i < str.length; i++){
+            setTimeout(function(){
+            temp+= str[i];
+                $('.newText').text(temp)
+            }, 300*(i+1))
+        }
+        if(k===strArray.length - 1) return;
+        setTimeout(function(){
+            var x = 0
+            for(let i = str.length; i >= 0; i--){
+                setTimeout(function(){
+                    $('.newText').text(str.slice(0,i));
+                    if(!i) animateWords(++k)
+                }, 300*x)
+                x++
+            }
+        }, 3000);
+    })
+    
+});
+</script>
+</body>
+</html>
