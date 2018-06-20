@@ -17,6 +17,59 @@
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 <script type="text/javascript" >
+
+function Tree(){
+    this.root = null;
+}
+
+Tree.prototype.addNode = function(val){
+    var n = new Node(val);
+    if(!this.root){
+        this.root = n;
+    } else {
+        this.root.addNode(n)
+    }
+}
+Tree.prototype.traverse = function(val){
+    this.root.visit();
+}
+function Node(val){
+    this.value = val;
+    this.left = null;
+    this.right = null;
+}
+
+Node.prototype.visit = function(n){
+    if(this.left){
+        this.left.visit();
+    }
+    console.log(this.value)
+    if(this.right){
+        this.right.visit();
+    }
+}
+
+Node.prototype.addNode = function(n){
+    if(n.value < this.value){
+        if(this.left == null){
+            this.left = n;
+        } else {
+            this.left.addNode(n)
+        }
+    } else {
+        if(this.right == null){
+            this.right = n;
+        } else {
+            this.right.addNode(n)
+        }
+    }
+}
+
+var t = new Tree();
+
+tree.addNode(5)
+tree.addNode(8)
+
 $(function() {
     var strArray = ["HTML", "CSS", "JAVASCRIPT"];
     var bubbles = $("#bubbles")

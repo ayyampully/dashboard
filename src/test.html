@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test</title>
+    <style>
+    body{margin:0}
+    div{box-sizing: border-box}
+    #container{border-right: 1px solid; color: #efefef; border-bottom: 1px solid;    float: left;}
+    .cell{width: 20px;
+    height: 20px;
+    border-left: 1px solid;
+    float: left; transition: background ease-out 400ms;
+    border-top: 1px solid;}
+    .row{float:left;}
+    
+    .cell.start{background:#60dcf4}
+    .cell.end{background:#068ffc}
+    .cell.path{background:#00e58b}
+    .cell.block{background:#ddd}
+    </style>
+</head>
+<body>
+<div id="container" class="ready-first">
+
+</div>
+
+<script type="text/javascript" >
+    (function() {
+        var cols = 40;
+        var rows = cols;
+        var container = document.getElementById('container');
+        container.style.width = (cols*20) + 'px'
+        for(var i = 0; i<rows; i++){
+            var row = document.createElement('div');
+            row.setAttribute('class',"row");
+            row.style.width = (cols*20) + 'px'
+            for(var j = 0; j<cols; j++){
+                var elm = document.createElement('div');
+                elm.setAttribute('class',"cell");
+                elm.setAttribute('id',"point_"+ j +"-"+ i);
+                row.append(elm)
+            }
+            container.append(row)
+        }
+        var blocks = []
+        var blk = rows-1
+        for(let k = 0; k<100; k++){
+           blocks.push([Math.ceil(Math.random() * blk), Math.ceil(Math.random() * blk)].join('-'))
+        }
+        blocks.forEach(function(block){
+            document.querySelector("#point_" + block).classList.add('block');
+        });
+        
+        var cells = document.querySelectorAll(".cell");
+        
+        cells.forEach(function(cell){
+            cell.addEventListener('click', onClick)
+        })
+        var start, end;
+        //var path = [];
+        function onClick(evt){
+            if(start && end) return;
+            elm = evt.target;
+            if(container.classList.contains("ready-first")){
+                elm.classList.add('start')
+                start =  elm.getAttribute('id').split('_')[1];
+                container.classList.remove("ready-first")
+                container.classList.add("ready-second")
+            } else if(container.classList.contains("ready-second")){
+                elm.classList.add('end')
+                end =  elm.getAttribute('id').split('_')[1];
+                container.classList.remove("ready-second")
+            }
+            if(start && end){
+                var startPoints = start.split('-');
+                var endPoints = end.split('-');
+                var coffient;
+                var pathArray = [];
+                
+                
+                (function findPath(c, sp){
+                    var points = [];
+                    for(let i = -1; i<2; i++){
+                        for(let j = -1; j<2; j++){
+                            var newpoint = [sp[0]-j, sp[1]-i];
+                            //console.log(blocks, newpoint.join('-'))
+                            if(blocks.indexOf(newpoint.join('-')) === -1){
+                                points.push(newpoint)
+                            }
+                            
+                        }
+                    }
+                    
+                    var nextSet;
+                    points.forEach(function(point){
+                        var a = point[0] - endPoints[0];
+                        var b = point[1] - endPoints[1];
+                        var temp = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+                        if(c === undefined || temp<c){
+                            c = temp;
+                            nextSet = point;
+                        }
+                    })
+                    if(c){
+                        pathArray.push(nextSet.join('-'))
+                        findPath(c, nextSet)
+                    }
+                })(coffient, startPoints);
+                
+                pathArray.forEach(function(path, i){
+                    setTimeout(function(){
+                         document.querySelector("#point_" + path).classList.add('path');
+                    }, 200*i)
+                   
+                })
+            }
+        }
+        
+    })()
+</script>
+<!--
+<script type="text/javascript" >
+
+function Tree(){
+    this.root = null;
+}
+
+Tree.prototype.addNode = function(val){
+    var n = new Node(val);
+    if(!this.root){
+        this.root = n;
+    } else {
+        this.root.addNode(n)
+    }
+}
+Tree.prototype.traverse = function(val){
+    this.root.visit();
+}
+
+Tree.prototype.search = function(val){
+    return this.root.search(val);
+}
+
+function Node(val){
+    this.value = val;
+    this.parent = null;
+    this.left = null;
+    this.right = null;
+}
+
+Node.prototype.visit = function(n){
+    if(this.left){
+        this.left.visit();
+    }
+    console.log(this.value)
+    if(this.right){
+        this.right.visit();
+    }
+}
+Node.prototype.search = function(n){
+    if(n === this.value){
+        return this;
+    } else if(n < this.value && this.left !== null){
+        return this.left.search(n);
+    } else if(n > this.value && this.right !== null){
+        return this.right.search(n);
+    } else {
+        return null;
+    }
+}
+Node.prototype.addNode = function(n){
+    if(n.value < this.value){
+        if(this.left == null){
+            this.left = n;
+            this.left.parent = this.value;
+        } else {
+            this.left.addNode(n)
+        }
+    } else {
+        if(this.right == null){
+            this.right = n;
+            this.right.parent = this.value;
+        } else {
+            this.right.addNode(n)
+        }
+    }
+}
+
+
+
+Tree.prototype.findCommon = function test(a, b){
+    var nodeA = this.search(a)
+    var nodeB = this.search(b)
+    var _this = this;
+    if(nodeA.parent === null && nodeB.parent === null){
+        return nodeA;
+    } else if(nodeA.parent === nodeB.parent){
+        return _this.search(nodeA.parent)
+    } else {
+        var nA = nodeA.parent ? nodeA.parent : nodeA.value;
+        var nB = nodeB.parent ? nodeB.parent : nodeB.value;
+        return test.call(this, nA, nB)
+    }
+    
+}
+var t = new Tree();
+
+t.addNode(5)
+t.addNode(1)
+t.addNode(8)
+t.addNode(3)
+t.addNode(2)
+t.addNode(4)
+console.log(JSON.parse(JSON.stringify(t)))
+t.traverse();
+console.log("look what i found", t.search(2))
+console.log(t.findCommon(8, 4))
+</script>
+-->
+</body>
+</html>
