@@ -16,7 +16,7 @@
     .cell.start{background:#60dcf4}
     .cell.end{background:#068ffc}
     .cell.path{background:#00e58b}
-    .cell.block{background:#ddd}
+    .cell.block{background:#ccc}
     </style>
 </head>
 <body>
@@ -101,7 +101,7 @@
                             nextSet = point;
                         }
                     })
-                    if(c){
+                    if(c && nextSet){
                         pathArray.push(nextSet.join('-'))
                         findPath(c, nextSet)
                     }

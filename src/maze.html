@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test</title>
+    <style>
+    body{margin:0}
+    div{box-sizing: border-box}
+    canvas{background: #222}
+    </style>
+</head>
+<body>
+<canvas id="canvas" ></canvas>
+
+</div>
+<script type="text/javascript" >
+(function(){
+    
+    var innerWidth = 400;
+    var innerHeight = 400;
+    var canvas = document.getElementById("canvas");
+    canvas.height = innerHeight;
+    canvas.width = innerWidth;
+    
+    var w = 20;
+    var cols = innerWidth/w
+    var rows = innerHeight/w;
+    
+    var cxt = canvas.getContext('2d');
+    cxt.strokeStyle = "#eee"
+    
+    var grid = [];
+    var current, stack = [];
+    for(var i = 0; i<rows; i++){
+        grid[i] = []
+        for(var j = 0; j<cols; j++){
+            grid[i][j] = new Cell(i, j)
+        }
+    }
+    current = grid[0][0]
+    function Cell(i, j){
+        this.i = i;
+        this.j = j;
+        this.visited = false;
+        this.walls = {
+            top: true,
+            left: true,
+            bottom: true,
+            right: true
+        }
+        this.show = function(){         
+            var x = this.i*w;
+            var y = this.j*w;
+            cxt.beginPath();
+            cxt.moveTo(x, y)
+            if(this.walls.top){
+                cxt.lineTo(x+w, y)
+            } else {
+                cxt.moveTo(x+w, y)
+            }
+            
+            if(this.walls.right){
+                cxt.lineTo(x+w, y+w)
+            } else {
+                cxt.moveTo(x+w, y+w)
+            }
+            
+            if(this.walls.bottom){
+                cxt.lineTo(x, y+w)
+            } else {
+                cxt.moveTo(x, y+w)
+            }
+            
+            if(this.walls.left){
+                cxt.lineTo(x, y)
+            } else {
+                cxt.moveTo(x, y)
+            }
+            
+            cxt.stroke();
+            
+            if(this.visited){
+                cxt.fillRect(x, y, w, w)
+                cxt.fillStyle = "#DE5B49";
+                cxt.fill();
+            }
+        }
+
+        this.findNext = function(){
+            var i = this.i;
+            var j = this.j;
+            var n = [];
+            var top = grid[i][ j-1 ];
+            var right = grid[i+1] ? grid[i+1][ j] : undefined;
+            var bottom = grid[i][ j+1 ];
+            var left = grid[i-1] ? grid[i-1][ j ]:undefined;
+            if(top && !top.visited) n.push(top)
+            if(right && !right.visited) n.push(right)
+            if(bottom && !bottom.visited) n.push(bottom)
+            if(left && !left.visited) n.push(left)
+            
+            if(n.length){
+                var ind = Math.round(Math.random()*(n.length-1));
+                return n[ind];
+            }
+        }
+    }
+    
+    function animate(){
+        requestAnimationFrame(animate);
+        cxt.clearRect(0, 0, innerWidth, innerHeight);
+        grid.forEach(function(row){
+            row.forEach(function(g){
+                g.show();
+            })
+        })
+        current.visited = true;
+        var next = current.findNext();
+        if(next){
+            stack.push(next);
+            if(current.j > next.j){
+                current.walls.top = false;
+                next.walls.bottom = false;
+            } else if(current.j < next.j){
+                current.walls.bottom = false;
+                next.walls.top = false;
+            }
+            if(current.i > next.i){
+                current.walls.left = false;
+                next.walls.right = false;
+            } else if(current.i < next.i){
+                current.walls.right = false;
+                next.walls.left = false;
+            }
+            current.show();
+            
+            current = next;
+        } else if(stack.length){
+            current = stack.pop()
+        }
+        
+    }
+   
+    animate();
+    
+
+})()
+</script>
+
+</body>
+</html>
