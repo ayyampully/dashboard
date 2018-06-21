@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test</title>
+    <style>
+    body{margin:0}
+    div{box-sizing: border-box}
+    canvas{background: #222}
+    </style>
+</head>
+<body>
+<canvas id="canvas" ></canvas>
+
+</div>
+<script type="text/javascript" >
+(function(){
+    
+    var nums = [1,2,3,4,5];
+    
+    function animate(){
+        animationId = requestAnimationFrame(animate);
+        console.log(nums)
+        var iX = -1, iY = -1;
+        
+        for(var i = 0; i<nums.length; i ++){
+            if(nums[i]<nums[i+1]){
+                iX = i;
+            }
+        }
+        for(var j = 0; j<nums.length; j ++){
+            if(nums[iX] < nums[j]){
+                iY = j;
+            }
+        }
+        var temp = nums[iX];
+        nums[iX] = nums[iY];
+        nums[iY] = temp;
+        
+        var spliced = nums.splice(iX+1);
+        spliced.reverse()
+        nums = nums.concat(spliced)
+        
+        
+        if(iX === -1) window.cancelAnimationFrame(animationId);
+
+        
+    }
+  
+    animate();
+    
+
+})()
+</script>
+
+</body>
+</html>

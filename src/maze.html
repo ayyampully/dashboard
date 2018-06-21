@@ -15,13 +15,13 @@
 <script type="text/javascript" >
 (function(){
     
-    var innerWidth = 400;
-    var innerHeight = 400;
+    var innerWidth = 600;
+    var innerHeight = 600;
     var canvas = document.getElementById("canvas");
     canvas.height = innerHeight;
     canvas.width = innerWidth;
     
-    var w = 20;
+    var w = 30;
     var cols = innerWidth/w
     var rows = innerHeight/w;
     
@@ -104,9 +104,9 @@
             }
         }
     }
-    
+    var animationId;
     function animate(){
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
         cxt.clearRect(0, 0, innerWidth, innerHeight);
         grid.forEach(function(row){
             row.forEach(function(g){
@@ -136,6 +136,8 @@
             current = next;
         } else if(stack.length){
             current = stack.pop()
+        } else {
+            window.cancelAnimationFrame(animationId);
         }
         
     }
