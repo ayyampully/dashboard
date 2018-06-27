@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test</title>
+    <style>
+    body{margin:0}
+    div{box-sizing: border-box}
+    canvas{background: #eee}
+    </style>
+</head>
+<body>
+<canvas id="canvas" ></canvas>
+
+</div>
+<script type="text/javascript" >
+(function(){
+    
+    var innerWidth = 600;
+    var innerHeight = 600;
+    var canvas = document.getElementById("canvas");
+    canvas.height = innerHeight;
+    canvas.width = innerWidth;
+    
+    var cxt = canvas.getContext('2d');
+    
+    var points = [];
+    canvas.addEventListener("click", function(e){
+        points.push({x: e.x, y: e.y})
+    
+    });
+    
+    var animationId;
+    
+    var m = 1;
+    var b = 0;
+    
+    function animate(){
+        animationId = requestAnimationFrame(animate);
+        cxt.clearRect(0, 0, innerWidth, innerHeight);
+        var xMean = 0, yMean = 0, xSum = 0, ySum = 0;
+        points.forEach(function(p){
+            cxt.beginPath();
+            cxt.arc(p.x, p.y, 5, Math.PI * 2, false)
+            cxt.fill();
+            xSum += p.x;
+            ySum += p.y;
+        });
+        if(points.length > 1){
+            xMean = xSum/points.length;
+            yMean = ySum/points.length;
+            var num = 0, den = 0;
+            points.forEach(function(p){
+                num += (p.x - xMean) * (p.y - yMean);
+                den += (p.x - xMean) * (p.x - xMean);
+            });
+            m = num/den;
+            b = yMean - m * xMean;
+        
+        
+            cxt.beginPath();
+            cxt.strokeStyle = "red";
+            var x1, x2, y1, y2;
+            
+            x1 = 0;
+            y1 = m * x1 + b;
+            
+            x2 = innerWidth;
+            y2 = m * x2 + b;
+            console.log()
+            cxt.moveTo(x1, y1)
+            cxt.lineTo(x2, y2)
+            cxt.stroke();
+        }
+        //window.cancelAnimationFrame(animationId);
+        
+    }
+   
+    animate();
+    
+
+})()
+</script>
+
+</body>
+</html>
