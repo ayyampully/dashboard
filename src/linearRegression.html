@@ -31,22 +31,50 @@
     
     var animationId;
     
-    var m = 1;
-    var b = 0;
     
+    var m = 1;
+        var b = 0;
     function animate(){
         animationId = requestAnimationFrame(animate);
         cxt.clearRect(0, 0, innerWidth, innerHeight);
-        var xMean = 0, yMean = 0, xSum = 0, ySum = 0;
+       // var xMean = 0, yMean = 0, xSum = 0, ySum = 0;
         points.forEach(function(p){
             cxt.beginPath();
             cxt.arc(p.x, p.y, 5, Math.PI * 2, false)
             cxt.fill();
-            xSum += p.x;
-            ySum += p.y;
+           // xSum += p.x;
+            //ySum += p.y;
         });
+        
+        
         if(points.length > 1){
-            xMean = xSum/points.length;
+            var rate = 0.0001;
+           
+             cxt.beginPath();
+            cxt.strokeStyle = "red";
+            var x1, x2, y1, y2;
+            
+            x1 = 0;
+            y1 = m * x1 + b;
+            
+            x2 = innerWidth;
+            y2 = m * x2 + b;
+
+            cxt.moveTo(x1, y1)
+            cxt.lineTo(x2, y2)
+            cxt.stroke();
+            
+             points.forEach(function(p){
+                var x = innerWidth - p.x;
+                var y = innerHeight - p.y;
+                
+                var guess = m * x + b;
+                var error = y - guess;
+                console.log(guess, error)
+                m = m + error * x * rate;
+                b = b + error * rate;
+            });
+          /*  xMean = xSum/points.length;
             yMean = ySum/points.length;
             var num = 0, den = 0;
             points.forEach(function(p){
@@ -57,19 +85,7 @@
             b = yMean - m * xMean;
         
         
-            cxt.beginPath();
-            cxt.strokeStyle = "red";
-            var x1, x2, y1, y2;
-            
-            x1 = 0;
-            y1 = m * x1 + b;
-            
-            x2 = innerWidth;
-            y2 = m * x2 + b;
-            console.log()
-            cxt.moveTo(x1, y1)
-            cxt.lineTo(x2, y2)
-            cxt.stroke();
+           ;*/
         }
         //window.cancelAnimationFrame(animationId);
         
