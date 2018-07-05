@@ -71,9 +71,13 @@ class Matrix{
         console.table(this.getMatrix());
     }
     map(fn){
-        return this.data.map(function(i){
-            return i.map(fn);
-        })
+        let result = new Matrix(this.rows, this.cols);
+        for(let i = 0; i < this.rows; i++){
+            for(let j = 0; j < this.cols; j++){
+                result.data[i][j] = fn(this.data[i][j]);
+            }
+        }
+        return result;
     }
     apply(fn){
         for(let i = 0; i < this.rows; i++){
@@ -109,9 +113,16 @@ class Matrix{
     }
     
     multiply(n){
+        if(typeof n !== 'number' && n.getMatrix){
+            n = n.getMatrix();
+        }
         for(let i = 0; i < this.rows; i++){
             for(let j = 0; j < this.cols; j++){
-                this.data[i][j] *= n;
+                if(typeof n === 'number'){
+                    this.data[i][j] *= n;
+                } else {
+                    this.data[i][j] *= n[i][j];
+                }
             }
         }
     }

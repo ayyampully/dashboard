@@ -18,36 +18,35 @@
 <script type="module" >
 
 import NeuralNetwork from './NeuralNetwork.js';
-//import Matrix from './Matrix.js';
-(function(){
-   /* let m = new Matrix([[2,3,1],[4,5,1]]);
-    let m2 = new Matrix([[5,8],[6,1],[7,4]]);
-    
-    console.table(m.getMatrix())
-    console.table(m2.getMatrix())
-    
-    console.table(m.transpose().getMatrix())
-    console.table(m2.transpose().getMatrix())
-    
-    console.table(Matrix.multiply(m, m2).getMatrix())
-    var x = m.map(function(ee){return ee})
-   m.printTable()
-    console.log(x)*/
-    
-    let nn = new NeuralNetwork(3,3,2);
-    
-    let input = [1, 0, 1]
-    let target = [1, 0]
-   nn.train(input, target)
-    //let output = nn.feedForward(input);
-    //nn.printWeightsAndBias()
-    //console.log(output)
-    
-})()
 /*(function(){
     
+    let nn = new NeuralNetwork(2,2,1);
+    let training_data = [{ input: [0, 0], output: [0]}, { input: [0, 1], output: [1]}, { input: [1, 0], output: [1]}, { input: [1, 1], output: [0]}]
+
+    for(let i = 0; i < 10000; i++){
+        for(let data of training_data){
+            nn.train(data.input, data.output);
+        }
+    }
+    let test_data = [{
+        input: [0, 0]
+    }, { 
+        input: [0, 1]
+    },{
+        input: [0, 0]
+    }, { 
+        input: [1, 1]
+    }];
+    for(let data of test_data){
+        console.log(nn.feedForward(data.input));
+    }
+
+    
+})()*/
+(function(){
+    
     var innerWidth = 600;
-    var innerHeight = 600;
+    var innerHeight = innerWidth;
     var canvas = document.getElementById("canvas");
     canvas.height = innerHeight;
     canvas.width = innerWidth;
@@ -56,11 +55,40 @@ import NeuralNetwork from './NeuralNetwork.js';
   
     var animationId;
     
+    
+    
+    let nn = new NeuralNetwork(2,6,1);
+    let training_data = [
+        { input: [0, 0], output: [0]}, 
+        { input: [0, 1], output: [1]}, 
+        { input: [1, 0], output: [1]}, 
+        { input: [1, 1], output: [0]}
+    ];
+
+    for(let i = 0; i < 1000; i++){
+        for(let data of training_data){
+            nn.train(data.input, data.output);
+        }
+    }
+    
+    
    
     function animate(){
         animationId = requestAnimationFrame(animate);
         cxt.clearRect(0, 0, innerWidth, innerHeight);
-      
+        
+        var size = 20;
+        var count = innerWidth / size;
+        var rgb = 255;
+        for(let i = 0;i<count; i++ ){
+            for(let j = 0; j<count; j++ ){
+                let x = i * size;
+                let y = j * size;
+                
+                let val = nn.predict([x/innerWidth, y/innerWidth]);
+                cxt.fillStyle = "rgb("+ rgb * val[0] +", 100, 255)"
+                cxt.fillRect(x, y, size, size);
+            }
         }
         window.cancelAnimationFrame(animationId);
         
@@ -69,7 +97,7 @@ import NeuralNetwork from './NeuralNetwork.js';
     animate();
     
 
-})()*/
+})()
 </script>
 
 </body>
